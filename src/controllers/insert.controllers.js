@@ -96,7 +96,7 @@ export async function postLodgingCommodities(req, res) {
     const commodities = await getLodgingCommoditiesDuplicates(lodgingId, commodityId);
     if (commodities.rowCount !== 0)
       return res.status(409).send({ message: "Comodidade já cadastrada!" });
-    //await insertLodgingCommodities(lodgingId, commodityId);
+    await insertLodgingCommodities(lodgingId, commodityId);
     res.sendStatus(201);
   } catch (error) {
     res.status(500).send(error);
