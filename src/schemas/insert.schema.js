@@ -1,5 +1,4 @@
 import joi from "joi";
-import dayjs from "dayjs";
 
 export const companySchema = joi.object({
   name: joi.string().required(),
@@ -29,7 +28,7 @@ export const lodgingSchema = joi.object({
 
 export const lodgingPhotoSchema = joi.object({
   lodgingId: joi.number().integer().required(),
-  photo: joi.string().uri().required(),
+  url: joi.string().uri().required(),
 });
 
 export const lodgingCommoditiesSchema = joi.object({

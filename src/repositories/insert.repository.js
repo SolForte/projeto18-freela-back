@@ -67,6 +67,10 @@ export function insertLodging(
   );
 }
 
+export function checkLodgingPhoto(lodgingId, url){
+  return db.query(`SELECT * FROM lodging_photos WHERE "lodgingId" = $1 AND "url" = $2;`, [lodgingId, url]);
+}
+
 export function insertLodgingPhoto(lodgingId, url) {
   return db.query(
     `

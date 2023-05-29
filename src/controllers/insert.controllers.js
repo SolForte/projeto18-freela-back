@@ -11,6 +11,7 @@ import {
   getLodgingNameCity,
   getCommodityName,
   getLodgingCommoditiesDuplicates,
+  checkLodgingPhoto,
 } from "../repositories/insert.repository.js";
 
 export async function postCompany(req, res) {
@@ -79,6 +80,9 @@ export async function postLodging(req, res) {
 export async function postLodgingPhoto(req, res) {
   const { lodgingId, url } = req.body;
   try {
+    const lodgingPhoto = await checkLodgingPhoto(lodgingId, url);
+    if (lodgingPhoto.rowCount !== 0)
+      return res.status(409).send({ message: "Foto já cadastrada!" });
     await insertLodgingPhoto(lodgingId, url);
     res.sendStatus(201);
   } catch (error) {
