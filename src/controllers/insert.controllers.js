@@ -42,7 +42,7 @@ export async function postCity(req, res) {
 export async function postFlight(req, res) {
   const {
     companyId,
-    departureCityId,
+    originCity,
     destinationCityId,
     departureDate,
     arrivalDate,
@@ -51,7 +51,7 @@ export async function postFlight(req, res) {
   try {
     await insertFlight(
       companyId,
-      departureCityId,
+      originCity,
       destinationCityId,
       departureDate,
       arrivalDate,
@@ -89,10 +89,10 @@ export async function postLodgingPhoto(req, res) {
 export async function postLodgingCommodities(req, res) {
   const { lodgingId, commodityId } = req.body;
   try {
-    const commodities = await getLodgingCommoditiesDuplicates(lodgingId);
+    const commodities = await getLodgingCommoditiesDuplicates(lodgingId, commodityId);
     if (commodities.rowCount !== 0)
       return res.status(409).send({ message: "Comodidade já cadastrada!" });
-    await insertLodgingCommodities(lodgingId, commodityId);
+    //await insertLodgingCommodities(lodgingId, commodityId);
     res.sendStatus(201);
   } catch (error) {
     res.status(500).send(error);

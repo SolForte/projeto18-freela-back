@@ -26,7 +26,7 @@ export function insertCity(name, photo) {
 
 export function insertFlight(
   companyId,
-  departureCityId,
+  originCity,
   destinationCityId,
   departureDate,
   arrivalDate,
@@ -34,10 +34,10 @@ export function insertFlight(
 ) {
   return db.query(
     `
-        INSERT INTO flights ("companyId", "departureCityId", "destinationCityId", "departureDate", "arrivalDate", "price") VALUES ($1, $2, $3, $4, $5);`,
+        INSERT INTO "flights" ("companyId", "originCity", "destinationCityId", "departureDate", "arrivalDate", "price") VALUES ($1, $2, $3, $4, $5, $6);`,
     [
       companyId,
-      departureCityId,
+      originCity,
       destinationCityId,
       departureDate,
       arrivalDate,
@@ -62,7 +62,7 @@ export function insertLodging(
 ) {
   return db.query(
     `
-        INSERT INTO lodgings ("name", "city", "mainPhoto", "description", "price") VALUES ($1, $2, $3, $4, $5, $6);`,
+        INSERT INTO lodgings ("name", "city", "mainPhoto", "description", "price") VALUES ($1, $2, $3, $4, $5);`,
     [name, city, mainPhoto, description, price]
   );
 }
@@ -92,13 +92,13 @@ export function insertLodgingCommodities(lodgingId, commodityId) {
 }
 
 export function getCommodityName(name) {
-  return db.query(`SELECT * FROM commodities WHERE name = $1;`, [name]);
+  return db.query(`SELECT * FROM commodity WHERE name = $1;`, [name]);
 }
 
 export function insertCommodity(name) {
   return db.query(
     `
-        INSERT INTO commodities ("name") VALUES ($1);`,
+        INSERT INTO commodity ("name") VALUES ($1);`,
     [name]
   );
 }

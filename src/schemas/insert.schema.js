@@ -1,4 +1,5 @@
 import joi from "joi";
+import dayjs from "dayjs";
 
 export const companySchema = joi.object({
   name: joi.string().required(),
@@ -11,7 +12,7 @@ export const citySchema = joi.object({
 
 export const flightSchema = joi.object({
   companyId: joi.number().integer().required(),
-  departureCityId: joi.number().integer().required(),
+  originCity: joi.string().required(),
   destinationCityId: joi.number().integer().required(),
   departureDate: joi.string().required(),
   arrivalDate: joi.string().required(),
