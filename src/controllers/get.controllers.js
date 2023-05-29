@@ -11,7 +11,7 @@ import {
 export async function listCities(_req, res) {
   try {
     const cidades = await getCities();
-    res.status(200).send(cidades.rows[0]);
+    res.status(200).send(cidades.rows);
   } catch (error) {
     res.status(500).send(error.message);
   }
