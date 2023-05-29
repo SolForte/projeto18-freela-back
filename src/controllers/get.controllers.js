@@ -6,6 +6,7 @@ import {
   getLodging,
   getLodgingPhotos,
   getLodgingCommodities,
+  getCityId
 } from "../repositories/get.repository.js";
 
 export async function listCities(_req, res) {
@@ -20,6 +21,7 @@ export async function listFlightsToCity(req, res) {
   const { id } = req.params;
   try {
     const flights = await getCityIdFlights(id);
+    const city = await getCityId(id);
     const flightsMap = flights.rows.map((flight) => ({
       id: flight.id,
       companyName: flight.companyName,
@@ -29,7 +31,14 @@ export async function listFlightsToCity(req, res) {
       arrivalDate: flight.arrivalDate,
       price: flight.price,
     }));
-    res.status(200).send(flightsMap);
+
+    const body = {
+      name: city.rows[0].name,
+      photo: city.rows[0].photo,
+      flights: flightsMap
+    }
+
+    res.status(200).send(body);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -43,6 +52,7 @@ export async function listFlightById(req, res) {
       companyName: flight.rows[0].companyName,
       origin: flight.rows[0].originCity,
       destination: flight.rows[0].destinationCityName,
+      destinationCityId: flight.rows[0].destinationCityId,
       departureDate: flight.rows[0].departureDate,
       arrivalDate: flight.rows[0].arrivalDate,
       price: flight.rows[0].price,
@@ -56,7 +66,22 @@ export async function listCityLodgings(req, res) {
   const { id } = req.params;
   try {
     const lodgings = await getCityIdLodgings(id);
-    res.status(200).send(lodgings.rows);
+    const city = await getCityId(id);
+
+
+    const lodgingsMap = lodgings.rows.map((lodging) => ({
+      id: lodging.id,
+      name: lodging.name,
+      mainPhoto: lodging.mainPhoto,
+      price: lodging.price
+    }))
+
+    const body = {
+      name: city.rows[0].name,
+      lodgings: lodgingsMap
+    }
+
+    res.status(200).send(body);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -65,6 +90,10 @@ export async function listLodgingById(req, res) {
   const { id } = req.params;
   try {
     const lodging = await getLodging(id);
+    if (lodging.rows.length === 0) {
+      res.status(404).send("Lodging not found");
+      return;
+    }
     const lodgingPhotos = await getLodgingPhotos(id);
     const lodgingCommodities = await getLodgingCommodities(id);
 
@@ -84,43 +113,3 @@ export async function listLodgingById(req, res) {
     res.status(500).send(error.message);
   }
 }
-
-/*
-[
-  {
-    "id": 1,
-    "name": "Casa da Mãe Joana - São Luís",
-    "price": "50",
-    "description": "Maravilhosa",
-    "mainPhoto": "https://i.ibb.co/cr5z9J1/6676508.png",
-    "cityName": "São Luís"
-  }
-]
-
-[
-  {
-    "id": 1,
-    "url": "https://i.ibb.co/swzy5FT/image.png"
-  },
-  {
-    "id": 3,
-    "url": "https://i.ibb.co/gVcTTxb/image.png"
-  }
-]
-
-[
-  {
-    "commodityName": "Café da Manhã"
-  },
-  {
-    "commodityName": "Piscina"
-  },
-  {
-    "commodityName": "Salão de Beleza"
-  },
-  {
-    "commodityName": "Opera"
-  }
-]
-
-*/

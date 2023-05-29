@@ -4,22 +4,29 @@ export async function getCities() {
   return db.query(`SELECT cities.id, cities.name FROM cities;`);
 }
 
+export async function getCityId(id) {
+  return db.query(`SELECT * FROM cities WHERE id = $1;`, [id]);
+}
+
 export async function getCityIdFlights(id) {
-  return db.query(`
+  return db.query(
+    `
   SELECT 
     flights.*,
     companies.name AS "companyName",
-    cities.name AS "destinationCityName"
+    cities.name AS "destinationCityName",
+    cities.id AS "destinationCityId"
   FROM flights
   JOIN companies ON flights."companyId" = companies.id
   JOIN cities ON flights."destinationCityId" = cities.id
-  WHERE "destinationCityId" = $1;`, [
-    id,
-  ]);
+  WHERE "destinationCityId" = $1;`,
+    [id]
+  );
 }
 
 export async function getFlight(id) {
-  return db.query(`
+  return db.query(
+    `
   SELECT 
     flights.*,
     companies.name AS "companyName",
@@ -27,22 +34,28 @@ export async function getFlight(id) {
   FROM flights
   JOIN companies ON flights."companyId" = companies.id
   JOIN cities ON flights."destinationCityId" = cities.id
-  WHERE flights.id = $1;`, [id]);
+  WHERE flights.id = $1;`,
+    [id]
+  );
 }
 
 export async function getCityIdLodgings(id) {
-  return db.query(`
+  return db.query(
+    `
   SELECT
     lodgings.id,
     lodgings.name,
     lodgings."mainPhoto",
     lodgings.price
   FROM lodgings WHERE "city" = $1;
-  `, [id]);
+  `,
+    [id]
+  );
 }
 
 export async function getLodging(id) {
-  return db.query(`
+  return db.query(
+    `
   SELECT
     lodgings.id,
     lodgings.name,
@@ -52,17 +65,21 @@ export async function getLodging(id) {
     cities.name AS "cityName"
   FROM lodgings
   JOIN cities ON lodgings.city = cities.id
-  WHERE lodgings.id = $1;`, [id]);
+  WHERE lodgings.id = $1;`,
+    [id]
+  );
 }
 
-export async function getLodgingPhotos(id){
+export async function getLodgingPhotos(id) {
   return db.query(
     `
     SELECT
+    lodging_photos.id AS "photoId",
     lodging_photos.url
     FROM lodging_photos
     WHERE "lodgingId" = $1;
-    `, [id]
+    `,
+    [id]
   );
 }
 
@@ -70,6 +87,7 @@ export function getLodgingCommodities(lodgingId) {
   return db.query(
     `
         SELECT
+          commodity.id AS "commodityId",
           commodity.name AS "commodityName"
         FROM
           lodging_commodities
